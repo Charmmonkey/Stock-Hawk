@@ -16,6 +16,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -45,8 +46,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private StockAdapter adapter;
 
     @Override
-    public void onClick(String symbol) {
-        Timber.d("Symbol clicked: %s", symbol);
+    public void onClick(String historyData) {
+        View historyView = findViewById(R.id.history_layout);
+        AddHistoryChart historyChart = new AddHistoryChart(historyView,historyData);
+        historyChart.createChart();
+        Timber.d("Symbol clicked: %s", historyData);
+
     }
 
     @Override
