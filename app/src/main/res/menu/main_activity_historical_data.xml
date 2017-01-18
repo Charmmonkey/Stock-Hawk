@@ -2,18 +2,29 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/action_1"
+        android:id="@+id/history_1w"
         android:enabled="true"
-        android:title="1"
-        app:showAsAction="ifRoom" />
+        android:title="1W"
+        app:showAsAction="always" />
     <item
-        android:id="@+id/action_2"
+        android:id="@+id/history_1m"
         android:enabled="true"
-        android:title="2s"
-        app:showAsAction="ifRoom" />
+        android:title="1M"
+        app:showAsAction="always" />
     <item
-        android:id="@+id/action_3"
+        android:id="@+id/history_6m"
         android:enabled="true"
-        android:title="3"
-        app:showAsAction="ifRoom" />
+        android:title="6M"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/history_1y"
+        android:enabled="true"
+        android:title="1Y"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/history_2y"
+        android:enabled="true"
+        android:title="2Y"
+        app:showAsAction="always" />
+
 </menu>

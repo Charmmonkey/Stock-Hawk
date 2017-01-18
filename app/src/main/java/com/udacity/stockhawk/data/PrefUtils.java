@@ -61,6 +61,14 @@ public final class PrefUtils {
         editStockPref(context, symbol, false);
     }
 
+    public static void editStockExistenceMarker(Context context, Boolean isStockExist){
+        String key = context.getString(R.string.stock_existence_key);
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putBoolean(key, isStockExist);
+        editor.apply();
+    }
+
     public static String getDisplayMode(Context context) {
         String key = context.getString(R.string.pref_display_mode_key);
         String defaultValue = context.getString(R.string.pref_display_mode_default);

@@ -1,13 +1,22 @@
 package com.udacity.stockhawk.ui;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.preference.Preference;
+import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,7 +25,9 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,6 +35,7 @@ import com.udacity.stockhawk.R;
 import com.udacity.stockhawk.data.Contract;
 import com.udacity.stockhawk.data.PrefUtils;
 import com.udacity.stockhawk.sync.QuoteSyncJob;
+import com.udacity.stockhawk.sync.StockBroadcastReceiver;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +45,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         SwipeRefreshLayout.OnRefreshListener,
         StockAdapter.StockAdapterOnClickHandler {
 
+
+    private static String newestAddedStock;
+    private static AddHistoryChart mHistoryChart;
+    private static String[] mHistoryDataSet;
+    private static View mParentView;
     private static final int STOCK_LOADER = 0;
+    private StockAdapter adapter;
+    private StockBroadcastReceiver stockBroadcastReceiver = new StockBroadcastReceiver(newestAddedStock);
+    LocalBroadcastManager bManager;
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.recycler_view)
     RecyclerView stockRecyclerView;
@@ -43,23 +63,30 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.error)
     TextView error;
-    private StockAdapter adapter;
+
 
     @Override
-    public void onClick(String historyData) {
-        View historyView = findViewById(R.id.history_layout);
-        AddHistoryChart historyChart = new AddHistoryChart(historyView,historyData);
-        historyChart.createChart();
-        Timber.d("Symbol clicked: %s", historyData);
-
+    public void onClick(String[] historyDataSet) {
+        mHistoryDataSet = historyDataSet;
+        // Add the history chart of the clicked stock
+        mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_1_WEEK]);
+        mHistoryChart.createChart();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        bManager = LocalBroadcastManager.getInstance(this);
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(QuoteSyncJob.RECEIVE_NONSTOCK);
+        intentFilter.addAction(QuoteSyncJob.ACTION_DATA_UPDATED);
+        bManager.registerReceiver(stockBroadcastReceiver, intentFilter);
+
+
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+        mParentView = findViewById(R.id.history_layout);
 
         adapter = new StockAdapter(this, this);
         stockRecyclerView.setAdapter(adapter);
@@ -87,6 +114,42 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }).attachToRecyclerView(stockRecyclerView);
 
 
+        BottomNavigationViewEx bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.bottom_navigation);
+        bottomNavigationView.enableItemShiftingMode(false);
+        bottomNavigationView.setIconVisibility(false);
+        bottomNavigationView.enableShiftingMode(false);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.history_1w:
+                        mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_1_WEEK]);
+                        mHistoryChart.createChart();
+                        break;
+                    case R.id.history_1m:
+                        mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_1_MONTH]);
+                        mHistoryChart.createChart();
+                        break;
+                    case R.id.history_6m:
+                        mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_6_MONTH]);
+                        mHistoryChart.createChart();
+                        break;
+                    case R.id.history_1y:
+                        mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_1_YEAR]);
+                        mHistoryChart.createChart();
+                        break;
+                    case R.id.history_2y:
+                        mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_2_YEAR]);
+                        mHistoryChart.createChart();
+                        break;
+
+                }
+
+                return true;
+            }
+        });
+        Timber.e("Preference should be editted true");
+        PrefUtils.editStockExistenceMarker(this, true);
     }
 
     private boolean networkUp() {
@@ -123,7 +186,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     void addStock(String symbol) {
         if (symbol != null && !symbol.isEmpty()) {
-
+            newestAddedStock = symbol;
             if (networkUp()) {
                 swipeRefreshLayout.setRefreshing(true);
             } else {
@@ -135,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             QuoteSyncJob.syncImmediately(this);
         }
     }
+
 
     @Override
     public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -152,6 +216,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             error.setVisibility(View.GONE);
         }
         adapter.setCursor(data);
+
+        data.moveToFirst();
+        String[] firstStockHistoryDataSet = {
+                data.getString(Contract.Quote.POSITION_HISTORY_1_WEEK),
+                data.getString(Contract.Quote.POSITION_HISTORY_1_MONTH),
+                data.getString(Contract.Quote.POSITION_HISTORY_6_MONTH),
+                data.getString(Contract.Quote.POSITION_HISTORY_1_YEAR),
+                data.getString(Contract.Quote.POSITION_HISTORY_2_YEAR)};
+
+        mHistoryDataSet = firstStockHistoryDataSet;
+
+        mHistoryChart = new AddHistoryChart(mParentView,mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_1_WEEK]);
+        mHistoryChart.createChart();
+
     }
 
 
@@ -190,5 +268,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+
+        bManager.unregisterReceiver(stockBroadcastReceiver);
+        super.onDestroy();
     }
 }

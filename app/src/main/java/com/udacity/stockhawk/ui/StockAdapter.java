@@ -41,12 +41,15 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
         percentageFormat.setMaximumFractionDigits(2);
         percentageFormat.setMinimumFractionDigits(2);
         percentageFormat.setPositivePrefix("+");
+
     }
 
     void setCursor(Cursor cursor) {
         this.cursor = cursor;
         notifyDataSetChanged();
     }
+
+
 
     String getSymbolAtPosition(int position) {
 
@@ -70,7 +73,7 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
 
         holder.symbol.setText(cursor.getString(Contract.Quote.POSITION_SYMBOL));
         holder.price.setText(dollarFormat.format(cursor.getFloat(Contract.Quote.POSITION_PRICE)));
-        Timber.d("History: "+ cursor.getString(Contract.Quote.POSITION_HISTORY));
+        Timber.d("History: " + cursor.getString(Contract.Quote.POSITION_HISTORY_1_WEEK));
 
         float rawAbsoluteChange = cursor.getFloat(Contract.Quote.POSITION_ABSOLUTE_CHANGE);
         float percentageChange = cursor.getFloat(Contract.Quote.POSITION_PERCENTAGE_CHANGE);
@@ -105,7 +108,7 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
 
 
     interface StockAdapterOnClickHandler {
-        void onClick(String symbol);
+        void onClick(String[] historyDataSet);
     }
 
     class StockViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -119,6 +122,7 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
         @BindView(R.id.change)
         TextView change;
 
+
         StockViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
@@ -129,7 +133,15 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             cursor.moveToPosition(adapterPosition);
-            clickHandler.onClick(cursor.getString(Contract.Quote.POSITION_HISTORY));
+
+            String[] historyDataSet = {
+                    cursor.getString(Contract.Quote.POSITION_HISTORY_1_WEEK),
+                    cursor.getString(Contract.Quote.POSITION_HISTORY_1_MONTH),
+                    cursor.getString(Contract.Quote.POSITION_HISTORY_6_MONTH),
+                    cursor.getString(Contract.Quote.POSITION_HISTORY_1_YEAR),
+                    cursor.getString(Contract.Quote.POSITION_HISTORY_2_YEAR)};
+
+            clickHandler.onClick(historyDataSet);
 
         }
 

@@ -17,6 +17,8 @@
     <string name="default_stocks_microsoft">MSFT</string>
     <string name="default_stocks_facebook">FB</string>
 
+    <string name="stock_existence_key">stock_existence</string>
+    <string name="stock_existence">true</string>
 
     <string name="action_change_units">@string/pref_display_mode_key</string>
 
