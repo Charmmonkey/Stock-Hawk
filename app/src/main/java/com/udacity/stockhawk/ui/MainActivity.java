@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onClick(String[] historyDataSet) {
         mHistoryDataSet = historyDataSet;
         // Add the history chart of the clicked stock
-        mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_1_WEEK]);
+        mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_6_MONTH]);
         mHistoryChart.createChart();
     }
 
@@ -121,35 +121,35 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.history_1w:
-                        mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_1_WEEK]);
-                        mHistoryChart.createChart();
-                        break;
-                    case R.id.history_1m:
-                        mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_1_MONTH]);
-                        mHistoryChart.createChart();
-                        break;
-                    case R.id.history_6m:
-                        mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_6_MONTH]);
-                        mHistoryChart.createChart();
-                        break;
-                    case R.id.history_1y:
-                        mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_1_YEAR]);
-                        mHistoryChart.createChart();
-                        break;
-                    case R.id.history_2y:
-                        mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_2_YEAR]);
-                        mHistoryChart.createChart();
-                        break;
-
+                if (mHistoryDataSet != null) {
+                    switch (item.getItemId()) {
+                        case R.id.history_1w:
+                            mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_1_WEEK]);
+                            mHistoryChart.createChart();
+                            break;
+                        case R.id.history_1m:
+                            mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_1_MONTH]);
+                            mHistoryChart.createChart();
+                            break;
+                        case R.id.history_6m:
+                            mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_6_MONTH]);
+                            mHistoryChart.createChart();
+                            break;
+                        case R.id.history_1y:
+                            mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_1_YEAR]);
+                            mHistoryChart.createChart();
+                            break;
+                        case R.id.history_2y:
+                            mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_2_YEAR]);
+                            mHistoryChart.createChart();
+                            break;
+                    }
                 }
 
                 return true;
             }
         });
         Timber.e("Preference should be editted true");
-        PrefUtils.editStockExistenceMarker(this, true);
     }
 
     private boolean networkUp() {
@@ -217,18 +217,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
         adapter.setCursor(data);
 
-        data.moveToFirst();
-        String[] firstStockHistoryDataSet = {
-                data.getString(Contract.Quote.POSITION_HISTORY_1_WEEK),
-                data.getString(Contract.Quote.POSITION_HISTORY_1_MONTH),
-                data.getString(Contract.Quote.POSITION_HISTORY_6_MONTH),
-                data.getString(Contract.Quote.POSITION_HISTORY_1_YEAR),
-                data.getString(Contract.Quote.POSITION_HISTORY_2_YEAR)};
+        if (data.moveToFirst()) {
+            String[] firstStockHistoryDataSet = {
+                    data.getString(Contract.Quote.POSITION_HISTORY_1_WEEK),
+                    data.getString(Contract.Quote.POSITION_HISTORY_1_MONTH),
+                    data.getString(Contract.Quote.POSITION_HISTORY_6_MONTH),
+                    data.getString(Contract.Quote.POSITION_HISTORY_1_YEAR),
+                    data.getString(Contract.Quote.POSITION_HISTORY_2_YEAR)};
 
-        mHistoryDataSet = firstStockHistoryDataSet;
+            mHistoryDataSet = firstStockHistoryDataSet;
 
-        mHistoryChart = new AddHistoryChart(mParentView,mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_1_WEEK]);
-        mHistoryChart.createChart();
+            mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_6_MONTH]);
+            mHistoryChart.createChart();
+        }
+
 
     }
 
