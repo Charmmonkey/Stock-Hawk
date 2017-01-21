@@ -45,11 +45,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         SwipeRefreshLayout.OnRefreshListener,
         StockAdapter.StockAdapterOnClickHandler {
 
-
     private static String newestAddedStock;
     private static AddHistoryChart mHistoryChart;
     private static String[] mHistoryDataSet;
     private static View mParentView;
+    private static Cursor mCursorAtClickedPosition;
     private static final int STOCK_LOADER = 0;
     private StockAdapter adapter;
     private StockBroadcastReceiver stockBroadcastReceiver = new StockBroadcastReceiver(newestAddedStock);
@@ -66,10 +66,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
     @Override
-    public void onClick(String[] historyDataSet) {
-        mHistoryDataSet = historyDataSet;
+    public void onClick(Cursor cursorAtClickedPosition) {
+
+        mCursorAtClickedPosition = cursorAtClickedPosition;
         // Add the history chart of the clicked stock
-        mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_6_MONTH]);
+        mHistoryChart = new AddHistoryChart(mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_6_MONTH);
         mHistoryChart.createChart();
     }
 
@@ -121,30 +122,29 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (mHistoryDataSet != null) {
-                    switch (item.getItemId()) {
-                        case R.id.history_1w:
-                            mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_1_WEEK]);
-                            mHistoryChart.createChart();
-                            break;
-                        case R.id.history_1m:
-                            mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_1_MONTH]);
-                            mHistoryChart.createChart();
-                            break;
-                        case R.id.history_6m:
-                            mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_6_MONTH]);
-                            mHistoryChart.createChart();
-                            break;
-                        case R.id.history_1y:
-                            mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_1_YEAR]);
-                            mHistoryChart.createChart();
-                            break;
-                        case R.id.history_2y:
-                            mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_2_YEAR]);
-                            mHistoryChart.createChart();
-                            break;
-                    }
+                switch (item.getItemId()) {
+                    case R.id.history_1w:
+                        mHistoryChart = new AddHistoryChart(mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_1_WEEK);
+                        mHistoryChart.createChart();
+                        break;
+                    case R.id.history_1m:
+                        mHistoryChart = new AddHistoryChart(mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_1_MONTH);
+                        mHistoryChart.createChart();
+                        break;
+                    case R.id.history_6m:
+                        mHistoryChart = new AddHistoryChart(mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_6_MONTH);
+                        mHistoryChart.createChart();
+                        break;
+                    case R.id.history_1y:
+                        mHistoryChart = new AddHistoryChart(mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_1_YEAR);
+                        mHistoryChart.createChart();
+                        break;
+                    case R.id.history_2y:
+                        mHistoryChart = new AddHistoryChart(mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_2_YEAR);
+                        mHistoryChart.createChart();
+                        break;
                 }
+
 
                 return true;
             }
@@ -218,16 +218,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         adapter.setCursor(data);
 
         if (data.moveToFirst()) {
-            String[] firstStockHistoryDataSet = {
-                    data.getString(Contract.Quote.POSITION_HISTORY_1_WEEK),
-                    data.getString(Contract.Quote.POSITION_HISTORY_1_MONTH),
-                    data.getString(Contract.Quote.POSITION_HISTORY_6_MONTH),
-                    data.getString(Contract.Quote.POSITION_HISTORY_1_YEAR),
-                    data.getString(Contract.Quote.POSITION_HISTORY_2_YEAR)};
-
-            mHistoryDataSet = firstStockHistoryDataSet;
-
-            mHistoryChart = new AddHistoryChart(mParentView, mHistoryDataSet[Contract.Quote.POSITION_HISTORY_SET_6_MONTH]);
+            mCursorAtClickedPosition = data;
+            mHistoryChart = new AddHistoryChart(mParentView, data, Contract.Quote.POSITION_HISTORY_6_MONTH);
             mHistoryChart.createChart();
         }
 

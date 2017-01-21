@@ -108,7 +108,7 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
 
 
     interface StockAdapterOnClickHandler {
-        void onClick(String[] historyDataSet);
+        void onClick(Cursor cursor);
     }
 
     class StockViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -133,15 +133,7 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             cursor.moveToPosition(adapterPosition);
-
-            String[] historyDataSet = {
-                    cursor.getString(Contract.Quote.POSITION_HISTORY_1_WEEK),
-                    cursor.getString(Contract.Quote.POSITION_HISTORY_1_MONTH),
-                    cursor.getString(Contract.Quote.POSITION_HISTORY_6_MONTH),
-                    cursor.getString(Contract.Quote.POSITION_HISTORY_1_YEAR),
-                    cursor.getString(Contract.Quote.POSITION_HISTORY_2_YEAR)};
-
-            clickHandler.onClick(historyDataSet);
+            clickHandler.onClick(cursor);
 
         }
 

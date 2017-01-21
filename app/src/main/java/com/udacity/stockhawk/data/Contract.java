@@ -41,11 +41,6 @@ public final class Contract {
         public static final int POSITION_HISTORY_1_YEAR = 8;
         public static final int POSITION_HISTORY_2_YEAR = 9;
 
-        public static final int POSITION_HISTORY_SET_1_WEEK = 0;
-        public static final int POSITION_HISTORY_SET_1_MONTH = 1;
-        public static final int POSITION_HISTORY_SET_6_MONTH = 2;
-        public static final int POSITION_HISTORY_SET_1_YEAR = 3;
-        public static final int POSITION_HISTORY_SET_2_YEAR = 4;
 
 
         public static final ImmutableList<String> QUOTE_COLUMNS = ImmutableList.of(

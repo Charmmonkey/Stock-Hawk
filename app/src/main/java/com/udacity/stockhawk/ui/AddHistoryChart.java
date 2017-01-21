@@ -1,6 +1,7 @@
 package com.udacity.stockhawk.ui;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Color;
 import android.view.MotionEvent;
 import android.view.View;
@@ -12,11 +13,14 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.ChartTouchListener;
+import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.listener.OnDrawLineChartTouchListener;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.udacity.stockhawk.R;
+import com.udacity.stockhawk.data.Contract;
 
 import org.w3c.dom.Text;
 
@@ -35,10 +39,14 @@ import timber.log.Timber;
  */
 
 public class AddHistoryChart {
-    View mView;
-    public final String mHistoryData;
-    List<Entry> entries = new ArrayList<Entry>();
-    List<String> xData = new ArrayList<>();
+    private View mView;
+    private Cursor mCursor;
+    private String mStockSymbol;
+    private String mCurrentPrice;
+    private String mHistoryData;
+    public static LineDataSet dataSet;
+    private List<Entry> entries = new ArrayList<Entry>();
+    private List<String> xData = new ArrayList<>();
     @BindView(R.id.line_chart)
     LineChart chart;
     @BindView(R.id.highlighted_value_price)
@@ -46,13 +54,21 @@ public class AddHistoryChart {
     @BindView(R.id.highlighted_value_date)
     TextView textViewOfDate;
 
-    public AddHistoryChart(View parentViewOfHistoryChart, String historyData) {
+    public AddHistoryChart(View parentViewOfHistoryChart, Cursor cursorAtClickedPosition, int positionHistoryChart) {
         mView = parentViewOfHistoryChart;
-        mHistoryData = historyData;
+        mCursor = cursorAtClickedPosition;
+
+        mHistoryData = mCursor.getString(positionHistoryChart);
+        mStockSymbol = mCursor.getString(Contract.Quote.POSITION_SYMBOL);
+        mCurrentPrice = mCursor.getString(Contract.Quote.POSITION_PRICE);
+
+
     }
 
     public void createChart() {
         ButterKnife.bind(this, mView);
+
+        setCurrentPriceViews();
 
         List<String> list = Lists.newArrayList(Splitter.on("\n").omitEmptyStrings().split(mHistoryData));
         Collections.reverse(list);
@@ -68,13 +84,13 @@ public class AddHistoryChart {
             i++;
         }
 
-        LineDataSet dataSet = new LineDataSet(entries, "Label");
+        dataSet = new LineDataSet(entries, "Label");
 
         dataSet.setCircleRadius((float) 1.5);
         dataSet.setDrawCircleHole(false);
         dataSet.setLineWidth(3);
         dataSet.setHighlightLineWidth(3);
-        dataSet.setHighLightColor(Color.WHITE);
+        dataSet.setHighLightColor(Color.TRANSPARENT);
         dataSet.setDrawHorizontalHighlightIndicator(false);
 
         LineData lineData = new LineData(dataSet);
@@ -90,7 +106,7 @@ public class AddHistoryChart {
         chart.setDrawMarkers(false);
         chart.setPinchZoom(false);
         chart.setClipToPadding(false);
-        chart.setViewPortOffsets(0,0,0,0);
+        chart.setViewPortOffsets(0, 0, 0, 0);
         chart.setDoubleTapToZoomEnabled(false);
         chart.getLineData().setDrawValues(false);
         chart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
@@ -106,30 +122,51 @@ public class AddHistoryChart {
 
             @Override
             public void onNothingSelected() {
+                setCurrentPriceViews();
             }
         });
+        chart.setOnChartGestureListener(new CustomOnChartGestureListener());
 
 
         chart.invalidate();
 
     }
 
-    private class CustomOnTouchListener extends OnDrawLineChartTouchListener {
 
-        @Override
-        public boolean onTouch(View v, MotionEvent event) {
 
-            return super.onTouch(v, event);
-        }
+    private void setCurrentPriceViews() {
+        textViewOfPrice.setText(mCurrentPrice);
+        textViewOfDate.setText("Today");
     }
 
     private String[] splitData(String singleData) {
         return singleData.split(",", 2);
     }
 
-
-    private String convertEpochTimeToMMMDDYYYY(long epochTime){
+    private String convertEpochTimeToMMMDDYYYY(long epochTime) {
         SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy");
         return sdf.format(new Date(epochTime));
+    }
+
+    private class CustomOnChartGestureListener implements OnChartGestureListener {
+        @Override
+        public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+            dataSet.setHighLightColor(Color.WHITE);}
+        @Override
+        public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
+            dataSet.setHighLightColor(Color.TRANSPARENT);
+            setCurrentPriceViews();}
+        @Override
+        public void onChartLongPressed(MotionEvent me) {}
+        @Override
+        public void onChartDoubleTapped(MotionEvent me) {}
+        @Override
+        public void onChartSingleTapped(MotionEvent me) {}
+        @Override
+        public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {}
+        @Override
+        public void onChartScale(MotionEvent me, float scaleX, float scaleY) {}
+        @Override
+        public void onChartTranslate(MotionEvent me, float dX, float dY) {}
     }
 }
