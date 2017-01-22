@@ -24,11 +24,14 @@ import com.udacity.stockhawk.data.Contract;
 
 import org.w3c.dom.Text;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -47,6 +50,8 @@ public class AddHistoryChart {
     public static LineDataSet dataSet;
     private List<Entry> entries = new ArrayList<Entry>();
     private List<String> xData = new ArrayList<>();
+    private final DecimalFormat dollarFormat;
+
     @BindView(R.id.line_chart)
     LineChart chart;
     @BindView(R.id.highlighted_value_price)
@@ -58,9 +63,11 @@ public class AddHistoryChart {
         mView = parentViewOfHistoryChart;
         mCursor = cursorAtClickedPosition;
 
+        dollarFormat = (DecimalFormat) NumberFormat.getCurrencyInstance(Locale.US);
+
         mHistoryData = mCursor.getString(positionHistoryChart);
         mStockSymbol = mCursor.getString(Contract.Quote.POSITION_SYMBOL);
-        mCurrentPrice = mCursor.getString(Contract.Quote.POSITION_PRICE);
+        mCurrentPrice = dollarFormat.format(mCursor.getFloat(Contract.Quote.POSITION_PRICE));
 
 
     }
@@ -90,6 +97,7 @@ public class AddHistoryChart {
         dataSet.setDrawCircleHole(false);
         dataSet.setLineWidth(3);
         dataSet.setHighlightLineWidth(3);
+        dataSet.setHighLightColor(Color.BLACK);
         dataSet.setHighLightColor(Color.TRANSPARENT);
         dataSet.setDrawHorizontalHighlightIndicator(false);
 
@@ -112,7 +120,7 @@ public class AddHistoryChart {
         chart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
             public void onValueSelected(Entry entry, Highlight highlight) {
-                textViewOfPrice.setText(Float.toString(entry.getY()));
+                textViewOfPrice.setText(dollarFormat.format(entry.getY()));
 
                 int indexOfX = (int) entry.getX();
                 long dateValueAtX = Long.valueOf(xData.get(indexOfX));

@@ -1,5 +1,12 @@
 package com.udacity.stockhawk.ui;
-
+// Mike Chen suggestions
+//dingindg
+/// ulachavhaluu
+// ipot
+// teaspresso
+//boiling beijing
+// dish dash
+// silkeden
 
 import android.content.Context;
 import android.database.Cursor;
@@ -41,7 +48,6 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
         percentageFormat.setMaximumFractionDigits(2);
         percentageFormat.setMinimumFractionDigits(2);
         percentageFormat.setPositivePrefix("+");
-
     }
 
     void setCursor(Cursor cursor) {
@@ -133,6 +139,8 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
             cursor.moveToPosition(adapterPosition);
+
+            // Pass positioned cursor back out to MainActivity
             clickHandler.onClick(cursor);
 
         }

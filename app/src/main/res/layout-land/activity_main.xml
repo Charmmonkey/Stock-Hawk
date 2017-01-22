@@ -7,21 +7,34 @@
     android:orientation="vertical"
     tools:context="com.udacity.stockhawk.ui.MainActivity">
 
-
     <LinearLayout
         android:id="@+id/history_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:weightSum="2"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp">
+        android:padding="8dp">
+
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/swipe_refresh"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin" />
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <android.support.v7.widget.CardView
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
             android:layout_weight="1"
             app:cardCornerRadius="4dp"
+            android:elevation="4dp"
             >
 
             <LinearLayout
@@ -56,7 +69,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     app:itemBackground="@android:color/transparent"
-                    app:itemIconTint="@xml/nav_item_state"
+                    app:itemIconTint="@android:color/white"
                     app:menu="@menu/main_activity_historical_data"/>
 
 
@@ -64,19 +77,7 @@
             </LinearLayout>
         </android.support.v7.widget.CardView>
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin" />
-        </android.support.v4.widget.SwipeRefreshLayout>
     </LinearLayout>
 
 
@@ -84,7 +85,7 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
+        android:layout_gravity="top|end"
         android:layout_margin="16dp"
         android:onClick="button"
         android:src="@drawable/fab_plus"
