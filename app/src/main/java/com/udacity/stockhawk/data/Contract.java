@@ -62,7 +62,7 @@ public final class Contract {
                 COLUMN_HISTORY_1_YEAR,
                 COLUMN_HISTORY_2_YEAR
         };
-        static final String TABLE_NAME = "quotes";
+        public static final String TABLE_NAME = "quotes";
 
         public static Uri makeUriForStock(String symbol) {
             return URI.buildUpon().appendPath(symbol).build();

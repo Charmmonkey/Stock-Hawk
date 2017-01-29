@@ -166,7 +166,7 @@ public final class QuoteSyncJob {
 
             if(isStockExist){
                 Intent dataUpdatedIntent = new Intent(ACTION_DATA_UPDATED);
-                LocalBroadcastManager.getInstance(context).sendBroadcast(dataUpdatedIntent);
+                context.sendBroadcast(dataUpdatedIntent);
             }
 
         } catch (IOException exception) {

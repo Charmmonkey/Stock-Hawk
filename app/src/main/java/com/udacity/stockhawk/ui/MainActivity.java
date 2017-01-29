@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static String[] mHistoryDataSet;
     private static View mParentView;
     private static Cursor mCursorAtClickedPosition;
+    private static int widgetClickedPosition;
     private static final int STOCK_LOADER = 0;
     private StockAdapter adapter;
     private StockBroadcastReceiver stockBroadcastReceiver = new StockBroadcastReceiver(newestAddedStock);
@@ -87,6 +88,11 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         intentFilter.addAction(QuoteSyncJob.ACTION_DATA_UPDATED);
         bManager.registerReceiver(stockBroadcastReceiver, intentFilter);
 
+
+        Bundle bundleExtraFromWidget = this.getIntent().getExtras();
+        if (bundleExtraFromWidget != null){
+            widgetClickedPosition = bundleExtraFromWidget.getInt(getString(R.string.widget_click_position));
+        }
 
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -218,11 +224,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
         adapter.setCursor(data);
 
-        if (data.moveToFirst()) {
+        if (data.moveToPosition(widgetClickedPosition)) {
             mCursorAtClickedPosition = data;
-            mHistoryChart = new AddHistoryChart(mParentView, data, Contract.Quote.POSITION_HISTORY_6_MONTH);
+            mHistoryChart = new AddHistoryChart(mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_6_MONTH);
+            mHistoryChart.createChart();
+        }else{
+            data.moveToFirst();
+            mCursorAtClickedPosition = data;
+            mHistoryChart = new AddHistoryChart(mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_6_MONTH);
             mHistoryChart.createChart();
         }
+
 
 
     }

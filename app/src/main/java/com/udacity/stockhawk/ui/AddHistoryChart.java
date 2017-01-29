@@ -54,6 +54,8 @@ public class AddHistoryChart {
 
     @BindView(R.id.line_chart)
     LineChart chart;
+    @BindView(R.id.highlighted_value_symbol)
+    TextView textViewOfSymbol;
     @BindView(R.id.highlighted_value_price)
     TextView textViewOfPrice;
     @BindView(R.id.highlighted_value_date)
@@ -80,6 +82,8 @@ public class AddHistoryChart {
         List<String> list = Lists.newArrayList(Splitter.on("\n").omitEmptyStrings().split(mHistoryData));
         Collections.reverse(list);
 
+        textViewOfSymbol.setText(mStockSymbol);
+
         int i = 0;
         for (String intervalData : list) {
             String[] xyData = splitData(intervalData);
@@ -97,12 +101,10 @@ public class AddHistoryChart {
         dataSet.setDrawCircleHole(false);
         dataSet.setLineWidth(3);
         dataSet.setHighlightLineWidth(3);
-        dataSet.setHighLightColor(Color.BLACK);
-        dataSet.setHighLightColor(Color.TRANSPARENT);
+        dataSet.setHighLightColor(R.color.material_grey_400);
         dataSet.setDrawHorizontalHighlightIndicator(false);
 
         LineData lineData = new LineData(dataSet);
-
 
         chart.setData(lineData);
         chart.setDrawGridBackground(false);
@@ -129,7 +131,9 @@ public class AddHistoryChart {
             }
 
             @Override
-            public void onNothingSelected() {
+            public void onNothingSelected()
+
+            {
                 setCurrentPriceViews();
             }
         });
@@ -159,7 +163,7 @@ public class AddHistoryChart {
     private class CustomOnChartGestureListener implements OnChartGestureListener {
         @Override
         public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-            dataSet.setHighLightColor(Color.WHITE);}
+            dataSet.setHighLightColor(R.color.material_grey_400);}
         @Override
         public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
             dataSet.setHighLightColor(Color.TRANSPARENT);

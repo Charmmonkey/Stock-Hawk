@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
+<!--RULE OF THUMB: size = 70dp * n -30dp   -->
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:initialLayout="@layout/stock_widget"
-    android:minHeight="50dp"
-    android:minWidth="50dp"
+    android:minResizeHeight="40dp"
+    android:minResizeWidth="110dp"
+    android:initialLayout="@layout/widget_list"
+    android:minHeight="110dp"
+    android:minWidth="110dp"
+    android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="0"
     />
 

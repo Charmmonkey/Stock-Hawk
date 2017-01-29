@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/widget_list_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/translucent_black_75"
+        android:minHeight="25dp"
+        android:orientation="horizontal"
+        android:padding="6dp"
+        android:weightSum="4">
+
+
+        <TextView
+            android:id="@+id/widget_symbol"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/widget_absolute_change"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:gravity="right" />
+
+        <TextView
+            android:id="@+id/widget_percentage_change"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:gravity="right" />
+
+        <TextView
+            android:id="@+id/widget_price"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:textSize="18sp"
+            android:gravity="right" />
+
+    </LinearLayout>
+</FrameLayout>
