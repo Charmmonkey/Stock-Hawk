@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.os.Binder;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.widget.AdapterView;
 import android.widget.RemoteViews;
@@ -85,7 +86,7 @@ public class StockWidgetRemoteService extends RemoteViewsService {
                 mCursor.close();
             }
             long identityToken = Binder.clearCallingIdentity();
-            mCursor = getContentResolver().query(Contract.Quote.URI, projection, null, null, null);
+            mCursor = getContentResolver().query(Contract.Quote.URI, projection, null, null, Contract.Quote.COLUMN_SYMBOL + " ASC");
             Binder.restoreCallingIdentity(identityToken);
 
         }
@@ -121,19 +122,31 @@ public class StockWidgetRemoteService extends RemoteViewsService {
                 widgetListItemView = new RemoteViews(mContext.getPackageName(), R.layout.widget_list_item_small);
             }
 
+            Float absoluteChangeFloat= mCursor.getFloat(INDEX_COLUMN_ABSOLUTE_CHANGE);
+
             symbol = mCursor.getString(INDEX_COLUMN_SYMBOL);
             price = dollarFormat.format(mCursor.getFloat(INDEX_COLUMN_PRICE));
-            absolute_change = dollarFormatWithPlus.format(mCursor.getFloat(INDEX_COLUMN_ABSOLUTE_CHANGE));
+            absolute_change = dollarFormatWithPlus.format(absoluteChangeFloat);
             percentage_change = dollarFormatWithPlus.format(mCursor.getFloat(INDEX_COLUMN_PERCENTAGE_CHANGE));
 
             final Intent fillIntent = new Intent().putExtra(getString(R.string.widget_click_position), position);
 
-//            RemoteViews widgetListItemView = new RemoteViews(getPackageName(), R.layout.widget_list_item);
             widgetListItemView.setTextViewText(R.id.widget_symbol, symbol);
             widgetListItemView.setTextViewText(R.id.widget_price, price);
             widgetListItemView.setTextViewText(R.id.widget_percentage_change, "(" + percentage_change +"%)");
             widgetListItemView.setTextViewText(R.id.widget_absolute_change, absolute_change);
             widgetListItemView.setOnClickFillInIntent(R.id.widget_list_item, fillIntent);
+
+            if(absoluteChangeFloat > 0){
+                widgetListItemView.setTextColor(R.id.widget_price, ContextCompat.getColor(mContext, R.color.material_green_A200));
+                widgetListItemView.setTextColor(R.id.widget_absolute_change, ContextCompat.getColor(mContext, R.color.material_green_A200));
+                widgetListItemView.setTextColor(R.id.widget_percentage_change, ContextCompat.getColor(mContext, R.color.material_green_A200));
+            } else{
+                widgetListItemView.setTextColor(R.id.widget_price, ContextCompat.getColor(mContext, R.color.material_red_A200));
+                widgetListItemView.setTextColor(R.id.widget_absolute_change, ContextCompat.getColor(mContext, R.color.material_red_A200));
+                widgetListItemView.setTextColor(R.id.widget_percentage_change, ContextCompat.getColor(mContext, R.color.material_red_A200));
+
+            }
 
             return widgetListItemView;
         }

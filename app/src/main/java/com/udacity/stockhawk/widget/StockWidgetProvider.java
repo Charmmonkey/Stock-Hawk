@@ -30,7 +30,6 @@ public class StockWidgetProvider extends AppWidgetProvider {
         Bundle newOptions = appWidgetManager.getAppWidgetOptions(R.id.stock_widget);
         widgetWidth = newOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH);
 
-
         for (int appWidgetId : appWidgetIds) {
             RemoteViews views = new RemoteViews(
                     context.getPackageName(),
@@ -46,7 +45,6 @@ public class StockWidgetProvider extends AppWidgetProvider {
                     .addNextIntentWithParentStack(clickIntentTemplate)
                     .getPendingIntent(0, PendingIntent.FLAG_UPDATE_CURRENT);
             views.setPendingIntentTemplate(R.id.stock_list_view, clickPendingIntentTemplate);
-
 
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }

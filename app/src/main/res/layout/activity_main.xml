@@ -98,6 +98,7 @@
         app:borderWidth="0dp"
         app:elevation="6dp"
         app:fabSize="normal"
+        android:contentDescription="@string/dialog_add"
         app:pressedTranslationZ="12dp" />
 
     <TextView
