@@ -41,7 +41,13 @@ public final class Contract {
         public static final int POSITION_HISTORY_1_YEAR = 8;
         public static final int POSITION_HISTORY_2_YEAR = 9;
 
-
+        public static final int[] HISTORY_POSITIONS_ARRAY = {
+                POSITION_HISTORY_1_WEEK,
+                POSITION_HISTORY_1_MONTH,
+                POSITION_HISTORY_6_MONTH,
+                POSITION_HISTORY_1_YEAR,
+                POSITION_HISTORY_2_YEAR
+        };
 
         public static final ImmutableList<String> QUOTE_COLUMNS = ImmutableList.of(
                 _ID,
@@ -54,7 +60,7 @@ public final class Contract {
                 COLUMN_HISTORY_6_MONTH,
                 COLUMN_HISTORY_1_YEAR,
                 COLUMN_HISTORY_2_YEAR
-                );
+        );
         public static final String[] HISTORY_COLUMNS = {
                 COLUMN_HISTORY_1_WEEK,
                 COLUMN_HISTORY_1_MONTH,

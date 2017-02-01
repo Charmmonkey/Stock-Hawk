@@ -3,4 +3,7 @@
     <dimen name="widget_width_large">180dp</dimen>
     <dimen name="widget_width_small">40dp</dimen>
     <dimen name="widget_width_default">110dp</dimen>
+    <dimen name="main_activity_padding_overlap">40dp</dimen>
+    <dimen name="main_activity_margin_negative_overlap">-32sp</dimen>
+
 </resources>

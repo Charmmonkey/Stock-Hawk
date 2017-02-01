@@ -1,8 +1,11 @@
 package com.udacity.stockhawk.ui;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.res.ResourcesCompat;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -17,6 +20,7 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.listener.OnDrawLineChartTouchListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
 import com.google.common.base.Splitter;
 import com.google.common.collect.Lists;
 import com.udacity.stockhawk.R;
@@ -47,6 +51,7 @@ public class AddHistoryChart {
     private String mStockSymbol;
     private String mCurrentPrice;
     private String mHistoryData;
+    private Context mContext;
     public static LineDataSet dataSet;
     private List<Entry> entries = new ArrayList<Entry>();
     private List<String> xData = new ArrayList<>();
@@ -61,7 +66,8 @@ public class AddHistoryChart {
     @BindView(R.id.highlighted_value_date)
     TextView textViewOfDate;
 
-    public AddHistoryChart(View parentViewOfHistoryChart, Cursor cursorAtClickedPosition, int positionHistoryChart) {
+    public AddHistoryChart(Context context, View parentViewOfHistoryChart, Cursor cursorAtClickedPosition, int positionHistoryChart) {
+        mContext = context;
         mView = parentViewOfHistoryChart;
         mCursor = cursorAtClickedPosition;
 
@@ -96,12 +102,13 @@ public class AddHistoryChart {
         }
 
         dataSet = new LineDataSet(entries, "Label");
-
         dataSet.setCircleRadius((float) 1.5);
         dataSet.setDrawCircleHole(false);
         dataSet.setLineWidth(3);
-        dataSet.setHighlightLineWidth(3);
-        dataSet.setHighLightColor(R.color.material_grey_400);
+        dataSet.setColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+        dataSet.setCircleColor(ContextCompat.getColor(mContext, R.color.colorPrimary));
+        dataSet.setHighlightLineWidth(2);
+        dataSet.setHighLightColor(ContextCompat.getColor(mContext ,R.color.material_grey_400));
         dataSet.setDrawHorizontalHighlightIndicator(false);
 
         LineData lineData = new LineData(dataSet);
@@ -131,9 +138,7 @@ public class AddHistoryChart {
             }
 
             @Override
-            public void onNothingSelected()
-
-            {
+            public void onNothingSelected() {
                 setCurrentPriceViews();
             }
         });
@@ -143,7 +148,6 @@ public class AddHistoryChart {
         chart.invalidate();
 
     }
-
 
 
     private void setCurrentPriceViews() {
@@ -163,22 +167,37 @@ public class AddHistoryChart {
     private class CustomOnChartGestureListener implements OnChartGestureListener {
         @Override
         public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-            dataSet.setHighLightColor(R.color.material_grey_400);}
+            dataSet.setHighLightColor(ContextCompat.getColor(mContext, R.color.material_grey_400));
+        }
+
         @Override
         public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
             dataSet.setHighLightColor(Color.TRANSPARENT);
-            setCurrentPriceViews();}
+            setCurrentPriceViews();
+        }
+
         @Override
-        public void onChartLongPressed(MotionEvent me) {}
+        public void onChartLongPressed(MotionEvent me) {
+        }
+
         @Override
-        public void onChartDoubleTapped(MotionEvent me) {}
+        public void onChartDoubleTapped(MotionEvent me) {
+        }
+
         @Override
-        public void onChartSingleTapped(MotionEvent me) {}
+        public void onChartSingleTapped(MotionEvent me) {
+        }
+
         @Override
-        public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {}
+        public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
+        }
+
         @Override
-        public void onChartScale(MotionEvent me, float scaleX, float scaleY) {}
+        public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
+        }
+
         @Override
-        public void onChartTranslate(MotionEvent me, float dX, float dY) {}
+        public void onChartTranslate(MotionEvent me, float dX, float dY) {
+        }
     }
 }

@@ -30,7 +30,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:textSize="18sp"
-            android:gravity="right" />
+            android:gravity="end" />
 
         <TextView
             android:id="@+id/widget_percentage_change"
@@ -39,7 +39,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:textSize="18sp"
-            android:gravity="right" />
+            android:gravity="end" />
 
         <TextView
             android:id="@+id/widget_price"
@@ -48,7 +48,7 @@
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:textSize="18sp"
-            android:gravity="right" />
+            android:gravity="end" />
 
     </LinearLayout>
 </FrameLayout>

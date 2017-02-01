@@ -21,6 +21,7 @@ import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -50,7 +51,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     private static String newestAddedStock;
     private static AddHistoryChart mHistoryChart;
-    private static String[] mHistoryDataSet;
+    private int bnvItemNumber = 2;
     private static View mParentView;
     private static Cursor mCursorAtClickedPosition;
     private static int widgetClickedPosition;
@@ -58,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private StockAdapter adapter;
     private StockBroadcastReceiver stockBroadcastReceiver = new StockBroadcastReceiver(newestAddedStock);
     LocalBroadcastManager bManager;
+    BottomNavigationViewEx bottomNavigationView;
     @SuppressWarnings("WeakerAccess")
     @BindView(R.id.recycler_view)
     RecyclerView stockRecyclerView;
@@ -74,13 +76,20 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         mCursorAtClickedPosition = cursorAtClickedPosition;
         // Add the history chart of the clicked stock
-        mHistoryChart = new AddHistoryChart(mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_6_MONTH);
+        bottomNavigationView.setCurrentItem(bnvItemNumber);
+        mHistoryChart = new AddHistoryChart(this, mParentView, mCursorAtClickedPosition, Contract.Quote.HISTORY_POSITIONS_ARRAY[bnvItemNumber]);
         mHistoryChart.createChart();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Timber.e("onCreate"
+        );
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setElevation(0);
+
 
         bManager = LocalBroadcastManager.getInstance(this);
         IntentFilter intentFilter = new IntentFilter();
@@ -90,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
         Bundle bundleExtraFromWidget = this.getIntent().getExtras();
-        if (bundleExtraFromWidget != null){
+        if (bundleExtraFromWidget != null) {
             widgetClickedPosition = bundleExtraFromWidget.getInt(getString(R.string.widget_click_position));
         }
 
@@ -123,33 +132,40 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         }).attachToRecyclerView(stockRecyclerView);
 
-        BottomNavigationViewEx bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.bottom_navigation);
+        bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.bottom_navigation);
         bottomNavigationView.enableItemShiftingMode(false);
         bottomNavigationView.setIconVisibility(false);
         bottomNavigationView.enableShiftingMode(false);
+        Timber.e("bnv clicked: " + widgetClickedPosition);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                Timber.e("bnv on click selected");
                 switch (item.getItemId()) {
                     case R.id.history_1w:
-                        mHistoryChart = new AddHistoryChart(mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_1_WEEK);
+                        mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_1_WEEK);
                         mHistoryChart.createChart();
+                        bnvItemNumber = 0;
                         break;
                     case R.id.history_1m:
-                        mHistoryChart = new AddHistoryChart(mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_1_MONTH);
+                        mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_1_MONTH);
                         mHistoryChart.createChart();
+                        bnvItemNumber = 1;
                         break;
                     case R.id.history_6m:
-                        mHistoryChart = new AddHistoryChart(mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_6_MONTH);
+                        mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_6_MONTH);
                         mHistoryChart.createChart();
+                        bnvItemNumber = 2;
                         break;
                     case R.id.history_1y:
-                        mHistoryChart = new AddHistoryChart(mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_1_YEAR);
+                        mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_1_YEAR);
                         mHistoryChart.createChart();
+                        bnvItemNumber = 3;
                         break;
                     case R.id.history_2y:
-                        mHistoryChart = new AddHistoryChart(mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_2_YEAR);
+                        mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_2_YEAR);
                         mHistoryChart.createChart();
+                        bnvItemNumber = 4;
                         break;
                 }
 
@@ -223,18 +239,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             error.setVisibility(View.GONE);
         }
         adapter.setCursor(data);
-
+        bottomNavigationView.setCurrentItem(bnvItemNumber);
         if (data.moveToPosition(widgetClickedPosition)) {
             mCursorAtClickedPosition = data;
-            mHistoryChart = new AddHistoryChart(mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_6_MONTH);
+            mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_6_MONTH);
             mHistoryChart.createChart();
-        }else{
-            data.moveToFirst();
-            mCursorAtClickedPosition = data;
-            mHistoryChart = new AddHistoryChart(mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_6_MONTH);
-            mHistoryChart.createChart();
-        }
+            Timber.e("positioned called" + widgetClickedPosition);
 
+        } else if (data.moveToFirst()) {
+            mCursorAtClickedPosition = data;
+            mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_6_MONTH);
+            mHistoryChart.createChart();
+            Timber.e("first called");
+        }
 
 
     }
