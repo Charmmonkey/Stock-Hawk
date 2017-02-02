@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.content.res.XmlResourceParser;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.graphics.Color;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -72,13 +73,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
 
     @Override
-    public void onClick(Cursor cursorAtClickedPosition) {
-
-        mCursorAtClickedPosition = cursorAtClickedPosition;
+    public void onClick(int adapterPosition) {
+        widgetClickedPosition = adapterPosition;
+        mCursorAtClickedPosition.moveToPosition(widgetClickedPosition);
         // Add the history chart of the clicked stock
         bottomNavigationView.setCurrentItem(bnvItemNumber);
         mHistoryChart = new AddHistoryChart(this, mParentView, mCursorAtClickedPosition, Contract.Quote.HISTORY_POSITIONS_ARRAY[bnvItemNumber]);
         mHistoryChart.createChart();
+
     }
 
     @Override
@@ -101,6 +103,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Bundle bundleExtraFromWidget = this.getIntent().getExtras();
         if (bundleExtraFromWidget != null) {
             widgetClickedPosition = bundleExtraFromWidget.getInt(getString(R.string.widget_click_position));
+            Timber.e("widgetClickedPosition: " + widgetClickedPosition);
+            mCursorAtClickedPosition.moveToPosition(widgetClickedPosition);
         }
 
         setContentView(R.layout.activity_main);
@@ -132,44 +136,54 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         }).attachToRecyclerView(stockRecyclerView);
 
+        final Toast toast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
+
         bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.bottom_navigation);
         bottomNavigationView.enableItemShiftingMode(false);
         bottomNavigationView.setIconVisibility(false);
         bottomNavigationView.enableShiftingMode(false);
-        Timber.e("bnv clicked: " + widgetClickedPosition);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                Timber.e("bnv on click selected");
+                mCursorAtClickedPosition.moveToPosition(widgetClickedPosition);
                 switch (item.getItemId()) {
                     case R.id.history_1w:
                         mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_1_WEEK);
                         mHistoryChart.createChart();
                         bnvItemNumber = 0;
+                        toast.setText("1 Week History");
+                        toast.show();
                         break;
                     case R.id.history_1m:
                         mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_1_MONTH);
                         mHistoryChart.createChart();
+                        Timber.e("cursor position: " + mCursorAtClickedPosition.getPosition());
                         bnvItemNumber = 1;
+                        toast.setText("1 Month History");
+                        toast.show();
                         break;
                     case R.id.history_6m:
                         mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_6_MONTH);
                         mHistoryChart.createChart();
                         bnvItemNumber = 2;
+                        toast.setText("6 Months History");
+                        toast.show();
                         break;
                     case R.id.history_1y:
                         mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_1_YEAR);
                         mHistoryChart.createChart();
                         bnvItemNumber = 3;
+                        toast.setText("1 Year History");
+                        toast.show();
                         break;
                     case R.id.history_2y:
                         mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_2_YEAR);
                         mHistoryChart.createChart();
                         bnvItemNumber = 4;
+                        toast.setText("2 Years History");
+                        toast.show();
                         break;
                 }
-
-
                 return true;
             }
         });
@@ -239,12 +253,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             error.setVisibility(View.GONE);
         }
         adapter.setCursor(data);
-        bottomNavigationView.setCurrentItem(bnvItemNumber);
         if (data.moveToPosition(widgetClickedPosition)) {
             mCursorAtClickedPosition = data;
             mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_6_MONTH);
             mHistoryChart.createChart();
-            Timber.e("positioned called" + widgetClickedPosition);
+            bottomNavigationView.setCurrentItem(bnvItemNumber);
+            Timber.e("widgetClickedPosition at loadFinish " + widgetClickedPosition);
+            Timber.e("mCursor get position at loadFinish " + mCursorAtClickedPosition.getPosition());
+
 
         } else if (data.moveToFirst()) {
             mCursorAtClickedPosition = data;
@@ -300,5 +316,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         bManager.unregisterReceiver(stockBroadcastReceiver);
         super.onDestroy();
+
+        widgetClickedPosition = 0;
     }
 }

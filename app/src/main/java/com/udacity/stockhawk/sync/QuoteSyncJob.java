@@ -103,7 +103,6 @@ public final class QuoteSyncJob {
 
                 StockQuote quote = stock.getQuote();
 
-                Timber.e("quote value: "+ quote.toString());
                 if (quote.getPrice() == null){
                     Timber.e("Tried to stop service");
                     Intent intentForNonexistentStock = new Intent(RECEIVE_NONSTOCK);

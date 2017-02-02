@@ -113,7 +113,7 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
 
 
     interface StockAdapterOnClickHandler {
-        void onClick(Cursor cursor);
+        void onClick(int position);
     }
 
     class StockViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -137,13 +137,8 @@ class StockAdapter extends RecyclerView.Adapter<StockAdapter.StockViewHolder> {
         @Override
         public void onClick(View v) {
             int adapterPosition = getAdapterPosition();
-            cursor.moveToPosition(adapterPosition);
 
-            // Pass positioned cursor back out to MainActivity
-            clickHandler.onClick(cursor);
-
+            clickHandler.onClick(adapterPosition);
         }
-
-
     }
 }

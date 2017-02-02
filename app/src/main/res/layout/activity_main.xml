@@ -20,9 +20,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:paddingBottom="8dp"
             android:background="@color/material_green_solid_A700"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="8dp">
 
             <TextView
                 android:id="@+id/highlighted_value_symbol"
@@ -68,13 +68,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:background="@android:color/transparent"
                 android:layout_marginRight="@dimen/activity_horizontal_margin">
 
 
                 <android.support.v7.widget.CardView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:elevation="4dp"
+                    app:cardUseCompatPadding="true"
+                    app:cardElevation="0dp"
                     app:cardCornerRadius="4dp">
 
                     <LinearLayout
@@ -96,7 +98,8 @@
                             android:focusable="true"
                             app:itemBackground="@android:color/transparent"
                             app:itemIconTint="@xml/nav_item_state"
-                            app:menu="@menu/main_activity_historical_data" />
+                            app:menu="@menu/main_activity_historical_data"
+                            />
 
                     </LinearLayout>
                 </android.support.v7.widget.CardView>
@@ -106,21 +109,32 @@
 
         </FrameLayout>
 
-
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh"
+        <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/main_activity_margin_negative_overlap"
-            android:layout_weight="1">
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/activity_horizontal_margin_compat"
+            android:paddingRight="@dimen/activity_horizontal_margin_compat" >
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/recycler_view"
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:paddingLeft="@dimen/activity_horizontal_margin"
-                android:paddingRight="@dimen/activity_horizontal_margin" />
-        </android.support.v4.widget.SwipeRefreshLayout>
+                android:layout_height="wrap_content">
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+
+            </android.support.v4.widget.SwipeRefreshLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="16dp"
+                android:background="@drawable/fade_down"/>
+        </FrameLayout>
+
     </LinearLayout>
 
 
@@ -134,7 +148,7 @@
         android:focusable="true"
         android:onClick="button"
         android:src="@drawable/fab_plus"
-        app:backgroundTint="@color/material_grey_600"
+        app:backgroundTint="@color/colorPrimaryDark"
         app:borderWidth="0dp"
         app:elevation="10dp"
         app:fabSize="normal"
