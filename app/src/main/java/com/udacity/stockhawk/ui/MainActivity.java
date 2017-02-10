@@ -141,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 mCursorAtClickedPosition.moveToPosition(widgetClickedPosition);
-                Timber.e("BNV clicked");
                 switch (item.getItemId()) {
                     case R.id.history_1w:
                         mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_1_WEEK);
