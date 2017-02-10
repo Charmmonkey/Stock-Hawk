@@ -86,8 +86,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Timber.e("onCreate"
-        );
 
         ActionBar actionBar = getSupportActionBar();
         actionBar.setElevation(0);
@@ -143,6 +141,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 mCursorAtClickedPosition.moveToPosition(widgetClickedPosition);
+                Timber.e("BNV clicked");
                 switch (item.getItemId()) {
                     case R.id.history_1w:
                         mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_1_WEEK);
@@ -152,7 +151,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     case R.id.history_1m:
                         mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_1_MONTH);
                         mHistoryChart.createChart();
-                        Timber.e("cursor position: " + mCursorAtClickedPosition.getPosition());
                         bnvItemNumber = 1;
 
                         break;
@@ -240,6 +238,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         swipeRefreshLayout.setRefreshing(false);
 
+        Timber.e("LoadFinished");
         if (data.getCount() != 0) {
             error.setVisibility(View.GONE);
         }
@@ -249,18 +248,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_6_MONTH);
             mHistoryChart.createChart();
             bottomNavigationView.setCurrentItem(bnvItemNumber);
-            Timber.e("widgetClickedPosition at loadFinish " + widgetClickedPosition);
-            Timber.e("mCursor get position at loadFinish " + mCursorAtClickedPosition.getPosition());
-
 
         } else if (data.moveToFirst()) {
             mCursorAtClickedPosition = data;
             mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_6_MONTH);
             mHistoryChart.createChart();
-            Timber.e("first called");
         }
-
-
     }
 
 

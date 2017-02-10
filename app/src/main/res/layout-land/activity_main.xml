@@ -83,7 +83,7 @@
                     <android.support.v7.widget.CardView
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        app:cardCornerRadius="4dp"
+                        app:cardCornerRadius="2dp"
                         app:cardElevation="0dp"
                         app:cardUseCompatPadding="true">
 
@@ -131,20 +131,20 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/recycler_view"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
-
-                <TextView
-                    android:id="@+id/error"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:gravity="center"
-                    android:textAppearance="@android:style/TextAppearance.Medium"
-                    android:visibility="gone"
-                    tools:text="Error message" />
+                    android:layout_height="match_parent"/>
 
             </android.support.v4.widget.SwipeRefreshLayout>
 
+            <TextView
+                android:id="@+id/error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:padding="@dimen/activity_horizontal_margin"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                android:visibility="gone"
+                tools:text="Error message" />
 
         </FrameLayout>
 

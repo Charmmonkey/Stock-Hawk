@@ -85,26 +85,16 @@ public final class QuoteSyncJob {
 
             Map<String, Stock> quotes = YahooFinance.get(stockArray);
 
-
-
             Iterator<String> iterator = stockCopy.iterator();
-
-            Timber.e(quotes.toString());
 
             ArrayList<ContentValues> quoteCVs = new ArrayList<>();
 
             while (iterator.hasNext()) {
                 String symbol = iterator.next();
-
-
                 Stock stock = quotes.get(symbol);
-
-
-
                 StockQuote quote = stock.getQuote();
 
                 if (quote.getPrice() == null){
-                    Timber.e("Tried to stop service");
                     Intent intentForNonexistentStock = new Intent(RECEIVE_NONSTOCK);
                     LocalBroadcastManager.getInstance(context).sendBroadcast(intentForNonexistentStock);
                     isStockExist = false;

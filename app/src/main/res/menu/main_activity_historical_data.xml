@@ -4,27 +4,27 @@
     <item
         android:id="@+id/history_1w"
         android:enabled="true"
-        android:title="1W"
+        android:title="@string/bnv_item_1_week"
         app:showAsAction="always" />
     <item
         android:id="@+id/history_1m"
         android:enabled="true"
-        android:title="1M"
+        android:title="@string/bnv_item_1_month"
         app:showAsAction="always" />
     <item
         android:id="@+id/history_6m"
         android:enabled="true"
-        android:title="6M"
+        android:title="@string/bnv_item_6_month"
         app:showAsAction="always" />
     <item
         android:id="@+id/history_1y"
         android:enabled="true"
-        android:title="1Y"
+        android:title="@string/bnv_item_1_year"
         app:showAsAction="always" />
     <item
         android:id="@+id/history_2y"
         android:enabled="true"
-        android:title="2Y"
+        android:title="@string/bnv_item_2_year"
         app:showAsAction="always" />
 
 </menu>

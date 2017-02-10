@@ -35,5 +35,11 @@
     <string name="widget_click_position" translatable="false">position</string>
 
     <string name="date_today" translatable="true">Today</string>
+    
+    <string name="bnv_item_1_week">1W</string>
+    <string name="bnv_item_1_month">1M</string>
+    <string name="bnv_item_6_month">6M</string>
+    <string name="bnv_item_1_year">1Y</string>
+    <string name="bnv_item_2_year">2Y</string>
 
 </resources>
