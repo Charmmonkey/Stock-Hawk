@@ -14,8 +14,9 @@
     <color name="material_green_A700">#BF00BFA5</color>
     <color name="material_green_solid_A700">#00BFA5</color>
     <color name="material_grey_700">#616161</color>
-    <color name="material_grey_600">#757575</color>
+    <color name="material_grey_600_custom">#757575</color>
     <color name="material_grey_200">#EEEEEE</color>
+    <color name="material_grey_300_custom">#E0E0E0</color>
 
 
     <color name="translucent_black_75">#BF000000</color>

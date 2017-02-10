@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.udacity.stockhawk.R;
+
 /**
  * Created by jerye on 1/17/2017.
  */
@@ -19,10 +21,7 @@ public class StockBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
         if (intent.getAction().equals(QuoteSyncJob.RECEIVE_NONSTOCK)) {
-            Toast.makeText(context, "Stock does not exist", Toast.LENGTH_SHORT).show();
-        }
-        if (intent.getAction().equals(QuoteSyncJob.ACTION_DATA_UPDATED)) {
-            Toast.makeText(context, "Added To Watchlist" , Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getString(R.string.toast_no_stocks_added), Toast.LENGTH_SHORT).show();
         }
     }
 }

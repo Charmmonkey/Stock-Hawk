@@ -28,6 +28,7 @@ import com.udacity.stockhawk.data.Contract;
 
 import org.w3c.dom.Text;
 
+import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
@@ -160,8 +161,8 @@ public class AddHistoryChart {
     }
 
     private String convertEpochTimeToMMMDDYYYY(long epochTime) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MMM dd yyyy");
-        return sdf.format(new Date(epochTime));
+        Locale locale = Locale.getDefault();
+        return DateFormat.getDateInstance(DateFormat.MEDIUM, locale).format(new Date(epochTime));
     }
 
     private class CustomOnChartGestureListener implements OnChartGestureListener {

@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.udacity.stockhawk.ui.MainActivity">
+
+
+    <android.support.percent.PercentRelativeLayout
+        android:id="@+id/history_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/material_grey_300_custom">
+
+
+        <LinearLayout
+            android:id="@+id/header_container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingBottom="8dp"
+            android:weightSum="1"
+            app:layout_heightPercent="100%"
+            app:layout_widthPercent="60%">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/highlighted_value_symbol"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/activity_main_text_size" />
+
+                <TextView
+                    android:id="@+id/highlighted_value_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@android:color/white"
+                    android:textSize="@dimen/activity_main_text_size"
+                    tools:text="price" />
+
+                <TextView
+                    android:id="@+id/highlighted_value_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:textColor="@android:color/white"
+                    tools:text="date" />
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:id="@+id/chart_view_container"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/main_activity_padding_overlap"
+                    android:background="@color/colorPrimary" />
+
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                    android:layout_marginRight="@dimen/activity_horizontal_margin"
+                    android:background="@android:color/transparent">
+
+
+                    <android.support.v7.widget.CardView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        app:cardCornerRadius="4dp"
+                        app:cardElevation="0dp"
+                        app:cardUseCompatPadding="true">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:weightSum="1">
+
+                            <com.github.mikephil.charting.charts.LineChart
+                                android:id="@+id/line_chart"
+                                android:layout_width="match_parent"
+                                android:layout_height="0dp"
+                                android:layout_weight="1" />
+
+                            <com.udacity.stockhawk.ui.BottomNavigationViewEx
+                                android:id="@+id/bottom_navigation"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:focusable="true"
+                                app:itemBackground="@android:color/transparent"
+                                app:itemIconTint="@xml/nav_item_state"
+                                app:menu="@menu/main_activity_historical_data" />
+
+                        </LinearLayout>
+                    </android.support.v7.widget.CardView>
+                </FrameLayout>
+            </FrameLayout>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/swipe_view_container"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_toEndOf="@id/header_container"
+            app:layout_heightPercent="100%"
+            app:layout_widthPercent="40%">
+
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/swipe_refresh"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
+                <TextView
+                    android:id="@+id/error"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:textAppearance="@android:style/TextAppearance.Medium"
+                    android:visibility="gone"
+                    tools:text="Error message" />
+
+            </android.support.v4.widget.SwipeRefreshLayout>
+
+
+        </FrameLayout>
+
+    </android.support.percent.PercentRelativeLayout>
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/floating_action_button_margin"
+        android:contentDescription="@string/dialog_description"
+        android:focusable="true"
+        android:onClick="button"
+        android:src="@drawable/fab_plus"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:borderWidth="0dp"
+        app:elevation="@dimen/floating_action_button_elevation"
+        app:fabSize="normal"
+        app:pressedTranslationZ="@dimen/floating_action_button_pressed_translation" />
+
+
+</merge>

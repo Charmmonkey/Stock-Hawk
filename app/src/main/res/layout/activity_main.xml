@@ -12,7 +12,7 @@
         android:id="@+id/history_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/material_grey_400"
+        android:background="@color/material_grey_300_custom"
         android:orientation="vertical"
         android:weightSum="2">
 
@@ -22,7 +22,7 @@
             android:layout_gravity="center_horizontal"
             android:background="@color/material_green_solid_A700"
             android:orientation="vertical"
-            android:paddingBottom="8dp">
+            android:paddingBottom="@dimen/activity_vertical_padding">
 
             <TextView
                 android:id="@+id/highlighted_value_symbol"
@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:textColor="@android:color/white"
-                android:textSize="20sp" />
+                android:textSize="@dimen/activity_main_text_size" />
 
             <TextView
                 android:id="@+id/highlighted_value_price"
@@ -38,7 +38,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:textColor="@android:color/white"
-                android:textSize="20sp"
+                android:textSize="@dimen/activity_main_text_size"
 
                 tools:text="price" />
 
@@ -131,8 +131,18 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="16dp"
+                android:layout_height="@dimen/activity_fade_height"
                 android:background="@drawable/fade_down"/>
+
+            <TextView
+                android:id="@+id/error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:textAppearance="@android:style/TextAppearance.Medium"
+                android:visibility="gone"
+                tools:text="Error message" />
         </FrameLayout>
 
     </LinearLayout>
@@ -143,24 +153,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        android:contentDescription="@string/dialog_add"
+        android:layout_margin="@dimen/floating_action_button_margin"
+        android:contentDescription="@string/dialog_description"
         android:focusable="true"
         android:onClick="button"
         android:src="@drawable/fab_plus"
         app:backgroundTint="@color/colorPrimaryDark"
         app:borderWidth="0dp"
-        app:elevation="10dp"
+        app:elevation="@dimen/floating_action_button_elevation"
         app:fabSize="normal"
-        app:pressedTranslationZ="12dp" />
+        app:pressedTranslationZ="@dimen/floating_action_button_pressed_translation" />
 
-    <TextView
-        android:id="@+id/error"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:textAppearance="@android:style/TextAppearance.Medium"
-        android:visibility="gone"
-        tools:text="Error message" />
+
 </merge>

@@ -1,6 +1,13 @@
 <resources>
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_horizontal_margin_compat">20dp</dimen>
+    <dimen name="activity_vertical_padding">8dp</dimen>
+    <dimen name="activity_fade_height">24dp</dimen>
+    <dimen name="activity_main_text_size">20sp</dimen>
+    <dimen name="activity_list_text_size">18sp</dimen>
+    <dimen name="floating_action_button_margin">16dp</dimen>
+    <dimen name="floating_action_button_elevation">10dp</dimen>
+    <dimen name="floating_action_button_pressed_translation">12dp</dimen>
     <dimen name="widget_width_large">180dp</dimen>
     <dimen name="widget_width_small">40dp</dimen>
     <dimen name="widget_width_default">110dp</dimen>

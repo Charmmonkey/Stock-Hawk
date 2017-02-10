@@ -89,7 +89,7 @@ public final class QuoteSyncJob {
 
             Iterator<String> iterator = stockCopy.iterator();
 
-            Timber.d(quotes.toString());
+            Timber.e(quotes.toString());
 
             ArrayList<ContentValues> quoteCVs = new ArrayList<>();
 

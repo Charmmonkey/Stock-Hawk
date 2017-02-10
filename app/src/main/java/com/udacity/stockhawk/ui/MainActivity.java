@@ -96,15 +96,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         bManager = LocalBroadcastManager.getInstance(this);
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(QuoteSyncJob.RECEIVE_NONSTOCK);
-        intentFilter.addAction(QuoteSyncJob.ACTION_DATA_UPDATED);
         bManager.registerReceiver(stockBroadcastReceiver, intentFilter);
 
 
         Bundle bundleExtraFromWidget = this.getIntent().getExtras();
-        if (bundleExtraFromWidget != null) {
+        try {
             widgetClickedPosition = bundleExtraFromWidget.getInt(getString(R.string.widget_click_position));
-            Timber.e("widgetClickedPosition: " + widgetClickedPosition);
-            mCursorAtClickedPosition.moveToPosition(widgetClickedPosition);
+        }catch(NullPointerException e){
+            e.printStackTrace();
         }
 
         setContentView(R.layout.activity_main);
@@ -136,8 +135,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             }
         }).attachToRecyclerView(stockRecyclerView);
 
-        final Toast toast = Toast.makeText(this, "", Toast.LENGTH_SHORT);
-
         bottomNavigationView = (BottomNavigationViewEx) findViewById(R.id.bottom_navigation);
         bottomNavigationView.enableItemShiftingMode(false);
         bottomNavigationView.setIconVisibility(false);
@@ -151,37 +148,31 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                         mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_1_WEEK);
                         mHistoryChart.createChart();
                         bnvItemNumber = 0;
-                        toast.setText("1 Week History");
-                        toast.show();
                         break;
                     case R.id.history_1m:
                         mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_1_MONTH);
                         mHistoryChart.createChart();
                         Timber.e("cursor position: " + mCursorAtClickedPosition.getPosition());
                         bnvItemNumber = 1;
-                        toast.setText("1 Month History");
-                        toast.show();
+
                         break;
                     case R.id.history_6m:
                         mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_6_MONTH);
                         mHistoryChart.createChart();
                         bnvItemNumber = 2;
-                        toast.setText("6 Months History");
-                        toast.show();
+
                         break;
                     case R.id.history_1y:
                         mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_1_YEAR);
                         mHistoryChart.createChart();
                         bnvItemNumber = 3;
-                        toast.setText("1 Year History");
-                        toast.show();
+
                         break;
                     case R.id.history_2y:
                         mHistoryChart = new AddHistoryChart(getApplicationContext(), mParentView, mCursorAtClickedPosition, Contract.Quote.POSITION_HISTORY_2_YEAR);
                         mHistoryChart.createChart();
                         bnvItemNumber = 4;
-                        toast.setText("2 Years History");
-                        toast.show();
+
                         break;
                 }
                 return true;
