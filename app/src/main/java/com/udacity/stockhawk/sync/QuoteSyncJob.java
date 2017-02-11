@@ -88,16 +88,20 @@ public final class QuoteSyncJob {
             Iterator<String> iterator = stockCopy.iterator();
 
             ArrayList<ContentValues> quoteCVs = new ArrayList<>();
+            Timber.e(quotes.toString());
 
             while (iterator.hasNext()) {
                 String symbol = iterator.next();
                 Stock stock = quotes.get(symbol);
+
+                if (stock ==  null) {
+                    broadcastNonexistentStock(context,symbol);
+                    break;
+                }
                 StockQuote quote = stock.getQuote();
 
                 if (quote.getPrice() == null){
-                    Intent intentForNonexistentStock = new Intent(RECEIVE_NONSTOCK);
-                    LocalBroadcastManager.getInstance(context).sendBroadcast(intentForNonexistentStock);
-                    isStockExist = false;
+                    broadcastNonexistentStock(context,symbol);
                     break;
                 }
 
@@ -161,7 +165,16 @@ public final class QuoteSyncJob {
         } catch (IOException exception) {
             Timber.e(exception, "Error fetching stock quotes");
         }
+
     }
+
+    private static void broadcastNonexistentStock(Context context, String symbol){
+        Intent intentForNonexistentStock = new Intent(RECEIVE_NONSTOCK);
+        LocalBroadcastManager.getInstance(context).sendBroadcast(intentForNonexistentStock);
+        PrefUtils.removeStock(context,symbol);
+        isStockExist = false;
+    }
+
 
     private static void schedulePeriodic(Context context) {
         Timber.d("Scheduling a periodic task");

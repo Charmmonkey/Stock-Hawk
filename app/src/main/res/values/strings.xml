@@ -28,9 +28,11 @@
     <string name="error_no_network" translatable="true">No network connectivity! Will load stock cursor when the network is available.</string>
     <string name="error_no_stocks" translatable="true">No stocks added! Hit the floating action button to add one.</string>
 
-    <string name="toast_no_stocks_added" translatable="true">No New Stocks Added</string>
+    <string name="toast_no_stocks_added" translatable="true">Stock does not exist!</string>
     <string name="toast_stock_added_no_connectivity" translatable="true">Symbol %s added. Will refresh when network available.</string>
     <string name="toast_no_connectivity" translatable="true">Will refresh when network available.</string>
+    <string name="toast_stock_already_exists">already exists!</string>
+    <string name="toast_stock_added">added to watchlist</string>
 
     <string name="widget_click_position" translatable="false">position</string>
 

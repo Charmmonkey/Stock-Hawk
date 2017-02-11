@@ -102,7 +102,7 @@ public class AddHistoryChart {
             i++;
         }
 
-        dataSet = new LineDataSet(entries, "Label");
+        dataSet = new LineDataSet(entries, "");
         dataSet.setCircleRadius((float) 1.5);
         dataSet.setDrawCircleHole(false);
         dataSet.setLineWidth(3);
@@ -150,10 +150,9 @@ public class AddHistoryChart {
 
     }
 
-
     private void setCurrentPriceViews() {
         textViewOfPrice.setText(mCurrentPrice);
-        textViewOfDate.setText("Today");
+        textViewOfDate.setText(mContext.getString(R.string.date_today));
     }
 
     private String[] splitData(String singleData) {

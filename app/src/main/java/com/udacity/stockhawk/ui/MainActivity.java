@@ -42,6 +42,8 @@ import com.udacity.stockhawk.data.PrefUtils;
 import com.udacity.stockhawk.sync.QuoteSyncJob;
 import com.udacity.stockhawk.sync.StockBroadcastReceiver;
 
+import java.util.Set;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import timber.log.Timber;
@@ -210,6 +212,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     void addStock(String symbol) {
+        symbol = symbol.toUpperCase();
+        Set<String> stocks = PrefUtils.getStocks(getApplicationContext());
+
+
         if (symbol != null && !symbol.isEmpty()) {
             newestAddedStock = symbol;
             if (networkUp()) {
@@ -219,8 +225,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 Toast.makeText(this, message, Toast.LENGTH_LONG).show();
             }
 
-            PrefUtils.addStock(this, symbol);
-            QuoteSyncJob.syncImmediately(this);
+            if (stocks.contains(symbol)){
+                Timber.e(symbol+ " already exists");
+                Toast.makeText(this, symbol + " " + getApplicationContext().getString(R.string.toast_stock_already_exists), Toast.LENGTH_SHORT).show();
+                swipeRefreshLayout.setRefreshing(false);
+            }else{
+                PrefUtils.addStock(this, symbol);
+                QuoteSyncJob.syncImmediately(this);
+                Toast.makeText(this, symbol + " " + getApplicationContext().getString(R.string.toast_stock_added), Toast.LENGTH_SHORT).show();
+
+            }
         }
     }
 
@@ -237,7 +251,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     public void onLoadFinished(Loader<Cursor> loader, Cursor data) {
         swipeRefreshLayout.setRefreshing(false);
 
-        Timber.e("LoadFinished");
         if (data.getCount() != 0) {
             error.setVisibility(View.GONE);
         }
